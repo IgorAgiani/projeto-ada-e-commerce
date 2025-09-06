@@ -1,12 +1,17 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemPedido {
     private Produto produto;
     private int quantidade;
-    private double precoVenda;
+    private List<ItemPedido> listaPedidos = new ArrayList<>();
 
-    public ItemPedido(Produto produto, int quantidade, double precoVenda) {
+    public ItemPedido() {
+    }
+
+    public ItemPedido(Produto produto, int quantidade) {
         this.produto = produto;
         this.quantidade = quantidade;
-        this.precoVenda = precoVenda;
     }
 
     public Produto getProduto() {
@@ -25,11 +30,15 @@ public class ItemPedido {
         this.quantidade = quantidade;
     }
 
-    public double getPrecoVenda() {
-        return precoVenda;
+    public void adicionarItem(Produto produto, int quantidade) {
+        listaPedidos.add(new ItemPedido(produto, quantidade));
     }
 
-    public void setPrecoVenda(double precoVenda) {
-        this.precoVenda = precoVenda;
+    public void removerItem(Produto produtoEscolhido) {
+        // implementar remoção
+    }
+
+    public void alterarQuantidade(Produto produto, int novaQuantidade) {
+        // implementar alteração
     }
 }

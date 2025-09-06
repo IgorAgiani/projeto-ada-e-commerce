@@ -4,15 +4,17 @@ import java.util.List;
 public class Pedido {
     private Cliente cliente;
     private LocalDate dataCriacao;
-    private List<ItemPedido> itens;
+    private List<ItemPedido> listaPedidos;
     private double valorTotal;
     private String statusPagamento;
 
-    public Pedido(Cliente cliente, LocalDate dataCriacao, List<ItemPedido> itens, double valorTotal, String statusPagamento) {
+    public Pedido() {
+    }
+
+    public Pedido(Cliente cliente, LocalDate dataCriacao, List<ItemPedido> listaPedidos, double valorTotal, String statusPagamento) {
         this.cliente = cliente;
         this.dataCriacao = dataCriacao;
-
-        this.itens = itens;
+        this.listaPedidos = listaPedidos;
         this.valorTotal = valorTotal;
         this.statusPagamento = statusPagamento;
     }
@@ -33,12 +35,12 @@ public class Pedido {
         this.dataCriacao = dataCriacao;
     }
 
-    public List<ItemPedido> getItens() {
-        return itens;
+    public List<ItemPedido> getListaPedidos() {
+        return listaPedidos;
     }
 
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
+    public void setListaPedidos(List<ItemPedido> listaPedidos) {
+        this.listaPedidos = listaPedidos;
     }
 
     public double getValorTotal() {
