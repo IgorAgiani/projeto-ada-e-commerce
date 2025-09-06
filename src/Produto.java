@@ -4,31 +4,25 @@ import java.util.Scanner;
 
 public class Produto implements GerenciadorCadastro<Produto> {
     private String nome;
-    private double preco;
+    private double precoInicial;
+    private int quantidade;
     private List<Produto> produtos = new ArrayList<>();
 
     public Produto() {
     }
 
-    public Produto(String nome, double preco) {
+    public Produto(String nome, double precoInicial, int quantidade) {
         this.nome = nome;
-        this.preco = preco;
+        this.precoInicial = precoInicial;
+        this.quantidade = quantidade;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public double getPreco() {
-        return preco;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
     }
 
     public List<Produto> getProdutos() {
@@ -39,6 +33,22 @@ public class Produto implements GerenciadorCadastro<Produto> {
         this.produtos = produtos;
     }
 
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public double getPrecoInicial() {
+        return precoInicial;
+    }
+
+    public void setPrecoInicial(double precoInicial) {
+        this.precoInicial = precoInicial;
+    }
+
     @Override
     public void cadastrar(Scanner scanner) {
         System.out.print("Nome: ");
@@ -47,9 +57,17 @@ public class Produto implements GerenciadorCadastro<Produto> {
         System.out.print("Preço: ");
         double preco = scanner.nextDouble();
 
-        Produto produto = new Produto(nome, preco);
+        System.out.println("Quantidade: ");
+        int quantidade = scanner.nextInt();
+
+        Produto produto = new Produto(nome, preco, quantidade);
         salvar(produto);
         System.out.println("Produto cadastrado com sucesso!");
+    }
+
+    @Override
+    public void cadastrar(Produto produto) {
+        salvar(produto);
     }
 
     @Override
@@ -67,18 +85,44 @@ public class Produto implements GerenciadorCadastro<Produto> {
 
     @Override
     public void atualizar() {
-        // Lógica para atualizar o produto na lista
-    }
+        listar();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Escolha o índice do produto a ser atualizado: ");
+        int index = scanner.nextInt();
+        scanner.nextLine(); // Consumir a nova linha
 
-    public Produto escolherPorIndice(int indice) {
-        if (indice >= 0 && indice < produtos.size()) {
-            return produtos.get(indice);
+        if (index < 0 || index >= produtos.size()) {
+            System.out.println("Índice inválido.");
+            return;
         }
-        return null;
+
+        Produto produto = produtos.get(index);
+
+        System.out.print("Novo nome: ");
+        String nome = scanner.nextLine();
+        if (!nome.isEmpty()) {
+            produto.setNome(nome);
+        }
+
+        System.out.print("Novo preço: ");
+        String precoInput = scanner.nextLine();
+        if (!precoInput.isEmpty()) {
+            double preco = Double.parseDouble(precoInput);
+            produto.setPrecoInicial(preco);
+        }
+
+        System.out.print("Nova quantidade: ");
+        String quantidadeInput = scanner.nextLine();
+        if (!quantidadeInput.isEmpty()) {
+            int quantidade = Integer.parseInt(quantidadeInput);
+            produto.setQuantidade(quantidade);
+        }
+
+        System.out.println("Produto atualizado com sucesso!");
     }
 
     @Override
     public String toString() {
-        return "Produto: " + nome + " - preço: R$" + preco;
+        return nome + " - R$" + precoInicial + " - estoque: " + quantidade;
     }
 }

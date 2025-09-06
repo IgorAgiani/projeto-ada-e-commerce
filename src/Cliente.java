@@ -41,6 +41,10 @@ public class Cliente implements GerenciadorCadastro<Cliente> {
         this.email = email;
     }
 
+    public void cadastrar(Cliente cliente) {
+        salvar(cliente);
+    }
+
     @Override
     public void cadastrar(Scanner scanner) {
         System.out.print("Nome: ");
@@ -77,21 +81,41 @@ public class Cliente implements GerenciadorCadastro<Cliente> {
 
     @Override
     public void atualizar() {
-        // logica para atualizar clientes
-    }
+        listar();
+        System.out.print("Escolha o índice do cliente que deseja atualizar: ");
+        Scanner scanner = new Scanner(System.in);
+        int indice = scanner.nextInt();
+        scanner.nextLine(); // Consumir a nova linha
 
-    public Cliente escolherPorIndice(int numero) {
-        if (numero >= 0 && numero < clientes.size()) {
-            return clientes.get(numero);
+        if (indice >= 0 && indice < clientes.size()) {
+            Cliente cliente = clientes.get(indice);
+
+            System.out.print("Novo nome: ");
+            String novoNome = scanner.nextLine();
+            if (!novoNome.isEmpty()) {
+                cliente.setNome(novoNome);
+            }
+
+            System.out.print("Novo RG: ");
+            String novoRg = scanner.nextLine();
+            if (!novoRg.isEmpty()) {
+                cliente.setRg(novoRg);
+            }
+
+            System.out.print("Novo e-mail: ");
+            String novoEmail = scanner.nextLine();
+            if (!novoEmail.isEmpty()) {
+                cliente.setEmail(novoEmail);
+            }
+
+            System.out.println("Cliente atualizado com sucesso!");
         } else {
             System.out.println("Índice inválido.");
-            return null;
         }
     }
 
     @Override
     public String toString() {
-        return "Nome: " + nome + " - RG: " + rg + "\nE-mail: " + email;
+        return nome + " - RG: " + rg + " - E-mail: " + email;
     }
-
 }

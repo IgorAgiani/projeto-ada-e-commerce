@@ -1,22 +1,23 @@
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Scanner;
 
 public class Pedido {
     private Cliente cliente;
     private LocalDate dataCriacao;
-    private List<ItemPedido> listaPedidos;
     private double valorTotal;
     private String statusPagamento;
+    private List<ItemPedido> itens;
 
     public Pedido() {
     }
 
-    public Pedido(Cliente cliente, LocalDate dataCriacao, List<ItemPedido> listaPedidos, double valorTotal, String statusPagamento) {
+    public Pedido(Cliente cliente, LocalDate dataCriacao, double valorTotal, String statusPagamento, List<ItemPedido> itens) {
         this.cliente = cliente;
         this.dataCriacao = dataCriacao;
-        this.listaPedidos = listaPedidos;
         this.valorTotal = valorTotal;
         this.statusPagamento = statusPagamento;
+        this.itens = itens;
     }
 
     public Cliente getCliente() {
@@ -27,20 +28,20 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
+    public List<ItemPedido> getItens() {
+        return itens;
     }
 
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
+    public void setItens(List<ItemPedido> itens) {
+        this.itens = itens;
     }
 
-    public List<ItemPedido> getListaPedidos() {
-        return listaPedidos;
+    public String getStatusPagamento() {
+        return statusPagamento;
     }
 
-    public void setListaPedidos(List<ItemPedido> listaPedidos) {
-        this.listaPedidos = listaPedidos;
+    public void setStatusPagamento(String statusPagamento) {
+        this.statusPagamento = statusPagamento;
     }
 
     public double getValorTotal() {
@@ -51,11 +52,11 @@ public class Pedido {
         this.valorTotal = valorTotal;
     }
 
-    public String getStatusPagamento() {
-        return statusPagamento;
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void setStatusPagamento(String statusPagamento) {
-        this.statusPagamento = statusPagamento;
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 }
