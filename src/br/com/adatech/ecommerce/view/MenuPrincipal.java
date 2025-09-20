@@ -114,11 +114,9 @@ public class MenuPrincipal {
 
             switch (opcao) {
                 case 1 -> pedidoService.adicionarItem(pedido, scanner, produtoService);
-                case 2 ->
-                        System.out.println("Funcionalidade a implementar..."); // pedidoService.alterarQuantidade(...)
-                case 3 -> System.out.println("Funcionalidade a implementar..."); // pedidoService.removerItem(...)
-                case 4 ->
-                        System.out.println("Funcionalidade a implementar..."); // pedidoService.finalizarPedido(...)
+                case 2 -> pedidoService.alterarQuantidadeItem(pedido, scanner);
+                case 3 -> pedidoService.removerItem(pedido, scanner);
+                case 4 -> System.out.println("Funcionalidade a implementar...");
                 case 0 -> System.out.println("Pedido cancelado.");
                 default -> System.out.println("Opção inválida.");
             }

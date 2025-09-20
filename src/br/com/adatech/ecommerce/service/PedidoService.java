@@ -58,10 +58,10 @@ public class PedidoService {
 
         System.out.println("\n--- Adicionar Item ao Pedido ---");
         System.out.println("Selecione um produto da lista:");
-        produtoService.listar(); // Reutiliza o serviço de produto para mostrar a lista
+        produtoService.listar();
 
         if (produtoRepository.buscarTodos().isEmpty()) {
-            return; // Sai se não há produtos para adicionar
+            return;
         }
 
         try {
@@ -85,16 +85,14 @@ public class PedidoService {
                 return;
             }
 
-            // Regra: O valor de venda pode ser diferente do valor do produto.
             System.out.print("Digite o preço de venda (pressione ENTER para usar o preço padrão de R$" + produtoSelecionado.getPrecoInicial() + "): ");
             String precoVendaInput = scanner.nextLine();
 
-            double precoVenda = produtoSelecionado.getPrecoInicial(); // Usa o preço padrão se nada for digitado
+            double precoVenda = produtoSelecionado.getPrecoInicial();
             if (!precoVendaInput.isEmpty()) {
                 precoVenda = Double.parseDouble(precoVendaInput);
             }
 
-            // Cria o ItemPedido e o adiciona à lista de itens do pedido
             ItemPedido novoItem = new ItemPedido(produtoSelecionado, quantidade, precoVenda);
             pedido.getItens().add(novoItem);
 
@@ -103,6 +101,85 @@ public class PedidoService {
         } catch (Exception e) {
             System.out.println("Ocorreu um erro ao adicionar o item. Verifique os dados digitados.");
             scanner.nextLine(); // Limpa o buffer em caso de erro
+        }
+    }
+
+    public void removerItem(Pedido pedido, Scanner scanner) {
+        if (pedido.getStatus() != StatusPedido.ABERTO) {
+            System.out.println("Este pedido não está aberto e não pode ser modificado.");
+            return;
+        }
+
+        System.out.println("\n--- Remover Item do Pedido ---");
+        if (pedido.getItens().isEmpty()) {
+            System.out.println("O pedido não contém itens para remover.");
+            return;
+        }
+
+        // Mostra os itens atuais com seus índices
+        System.out.println("Itens atuais no pedido:");
+        for (int i = 0; i < pedido.getItens().size(); i++) {
+            System.out.println(i + " - " + pedido.getItens().get(i));
+        }
+
+        try {
+            System.out.print("Digite o índice do item que deseja remover: ");
+            int indice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (indice >= 0 && indice < pedido.getItens().size()) {
+                ItemPedido itemRemovido = pedido.getItens().remove(indice);
+                System.out.println("Item removido com sucesso: " + itemRemovido.getProduto().getNome());
+            } else {
+                System.out.println("Erro: Índice inválido.");
+            }
+        } catch (Exception e) {
+            System.out.println("Ocorreu um erro. Por favor, digite um número válido.");
+            scanner.nextLine();
+        }
+    }
+
+    public void alterarQuantidadeItem(Pedido pedido, Scanner scanner) {
+        if (pedido.getStatus() != StatusPedido.ABERTO) {
+            System.out.println("Este pedido não está aberto e não pode ser modificado.");
+            return;
+        }
+
+        System.out.println("\n--- Alterar Quantidade do Item ---");
+        if (pedido.getItens().isEmpty()) {
+            System.out.println("O pedido não contém itens para alterar.");
+            return;
+        }
+
+        System.out.println("Itens atuais no pedido:");
+        for (int i = 0; i < pedido.getItens().size(); i++) {
+            System.out.println(i + " - " + pedido.getItens().get(i));
+        }
+
+        try {
+            System.out.print("Digite o índice do item que deseja alterar: ");
+            int indice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (indice >= 0 && indice < pedido.getItens().size()) {
+                ItemPedido itemParaAlterar = pedido.getItens().get(indice);
+
+                System.out.print("Digite a nova quantidade para '" + itemParaAlterar.getProduto().getNome() + "': ");
+                int novaQuantidade = scanner.nextInt();
+                scanner.nextLine();
+
+                if (novaQuantidade > 0) {
+                    itemParaAlterar.setQuantidade(novaQuantidade);
+                    System.out.println("Quantidade alterada com sucesso!");
+                } else {
+                    System.out.println("Erro: A quantidade deve ser maior que zero. Para remover o item, use a opção 3.");
+                }
+            } else {
+                System.out.println("Erro: Índice inválido.");
+            }
+        } catch (Exception e) {
+            System.out.println("Ocorreu um erro. Por favor, digite um número válido.");
+            scanner.nextLine();
         }
     }
 }
