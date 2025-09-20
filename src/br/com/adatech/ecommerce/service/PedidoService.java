@@ -182,4 +182,51 @@ public class PedidoService {
             scanner.nextLine();
         }
     }
+
+    public boolean finalizarPedido(Pedido pedido) {
+        System.out.println("\n--- Finalizando Pedido ---");
+
+        if (pedido.getItens().isEmpty()) {
+            System.out.println("Erro: Não é possível finalizar um pedido sem itens.");
+            return false;
+        }
+        if (pedido.getValorTotal() <= 0) {
+            System.out.println("Erro: Não é possível finalizar um pedido com valor total igual ou menor que zero.");
+            return false;
+        }
+
+        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+
+        System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
+        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().getNome() + " por e-mail (" + pedido.getCliente().getEmail() + "):");
+        System.out.println(">> Olá, " + pedido.getCliente().getNome() + "! Seu pedido de R$" + pedido.getValorTotal() + " foi recebido e está aguardando pagamento.");
+
+        return true;
+    }
+
+    public void pagarPedido(Pedido pedido) {
+        if (pedido.getStatus() != StatusPedido.AGUARDANDO_PAGAMENTO) {
+            System.out.println("Erro: Este pedido não pode ser pago, pois seu status é '" + pedido.getStatus() + "'.");
+            return;
+        }
+
+        pedido.setStatus(StatusPedido.PAGO);
+        System.out.println("\nPagamento processado com sucesso!");
+        System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
+        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().getNome() + " por e-mail (" + pedido.getCliente().getEmail() + "):");
+        System.out.println(">> Olá, " + pedido.getCliente().getNome() + "! O pagamento do seu pedido foi confirmado. Em breve, ele será enviado para entrega.");
+    }
+
+    public void entregarPedido(Pedido pedido) {
+        if (pedido.getStatus() != StatusPedido.PAGO) {
+            System.out.println("Erro: Este pedido não pode ser entregue, pois seu status é '" + pedido.getStatus() + "'.");
+            return;
+        }
+
+        pedido.setStatus(StatusPedido.FINALIZADO);
+        System.out.println("\nPedido enviado para entrega!");
+        System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
+        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().getNome() + " por e-mail (" + pedido.getCliente().getEmail() + "):");
+        System.out.println(">> Olá, " + pedido.getCliente().getNome() + "! Seu pedido saiu para entrega. Obrigado por comprar na Ada Commerce!");
+    }
 }

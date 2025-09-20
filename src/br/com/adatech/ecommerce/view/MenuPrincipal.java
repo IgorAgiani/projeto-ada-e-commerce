@@ -3,6 +3,7 @@ package br.com.adatech.ecommerce.view;
 import br.com.adatech.ecommerce.model.Cliente;
 import br.com.adatech.ecommerce.model.Pedido;
 import br.com.adatech.ecommerce.model.Produto;
+import br.com.adatech.ecommerce.model.StatusPedido;
 import br.com.adatech.ecommerce.repository.ClienteRepository;
 import br.com.adatech.ecommerce.repository.PedidoRepository;
 import br.com.adatech.ecommerce.repository.ProdutoRepository;
@@ -10,6 +11,7 @@ import br.com.adatech.ecommerce.service.ClienteService;
 import br.com.adatech.ecommerce.service.PedidoService;
 import br.com.adatech.ecommerce.service.ProdutoService;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuPrincipal {
@@ -22,7 +24,6 @@ public class MenuPrincipal {
     private ClienteService clienteService = new ClienteService(clienteRepository);
     private ProdutoService produtoService = new ProdutoService(produtoRepository);
     private PedidoService pedidoService = new PedidoService(pedidoRepository, clienteRepository, produtoRepository);
-
 
     public void iniciar() {
 
@@ -40,6 +41,7 @@ public class MenuPrincipal {
             System.out.println("1 - Gerenciar Clientes");
             System.out.println("2 - Gerenciar Produtos");
             System.out.println("3 - Criar Nova Venda");
+            System.out.println("4 - Processar Pagamento/Entrega de Pedidos");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
@@ -49,6 +51,7 @@ public class MenuPrincipal {
                 case 1 -> menuClientes();
                 case 2 -> menuProdutosEstoque();
                 case 3 -> menuVenda();
+                case 4 -> menuProcessarPedidos();
                 case 0 -> System.out.println("Encerrando o sistema...");
                 default -> System.out.println("Opção inválida.");
             }
@@ -99,27 +102,71 @@ public class MenuPrincipal {
 
     private void gerenciarItensDoPedido (Pedido pedido){
         int opcao = -1;
-        while (opcao != 0) {
+        while (opcao != 0 && pedido.getStatus() == StatusPedido.ABERTO) {
             System.out.println("\n--- Gerenciando Pedido de " + pedido.getCliente().getNome() + " ---");
             System.out.println("Status: " + pedido.getStatus() + " | Itens: " + pedido.getItens().size() + " | Valor Total: R$" + pedido.getValorTotal());
             System.out.println("1 - Adicionar Item");
             System.out.println("2 - Alterar Quantidade de um Item");
             System.out.println("3 - Remover Item");
-            System.out.println("4 - Finalizar Pedido"); // Próximo grande passo
+            System.out.println("4 - Finalizar Pedido");
             System.out.println("0 - Cancelar Pedido");
             System.out.print("Escolha uma opção: ");
 
             opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpa o buffer
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1 -> pedidoService.adicionarItem(pedido, scanner, produtoService);
                 case 2 -> pedidoService.alterarQuantidadeItem(pedido, scanner);
                 case 3 -> pedidoService.removerItem(pedido, scanner);
-                case 4 -> System.out.println("Funcionalidade a implementar...");
+                case 4 -> {
+                    pedidoService.finalizarPedido(pedido);
+                }
                 case 0 -> System.out.println("Pedido cancelado.");
                 default -> System.out.println("Opção inválida.");
             }
+        }
+    }
+
+    private void menuProcessarPedidos() {
+        System.out.println("\n--- Processar Pedidos Pendentes ---");
+        List<Pedido> todosOsPedidos = pedidoRepository.buscarTodos();
+
+        if (todosOsPedidos.isEmpty()) {
+            System.out.println("Não há nenhum pedido na base.");
+            return;
+        }
+
+        for (int i = 0; i < todosOsPedidos.size(); i++) {
+            Pedido p = todosOsPedidos.get(i);
+            System.out.println(i + " - Cliente: " + p.getCliente().getNome() + " | Status: " + p.getStatus() + " | Valor: R$" + p.getValorTotal());
+        }
+
+        System.out.print("\nEscolha o índice do pedido que deseja processar: ");
+        int indice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (indice < 0 || indice >= todosOsPedidos.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
+
+        Pedido pedidoSelecionado = todosOsPedidos.get(indice);
+
+        if (pedidoSelecionado.getStatus() == StatusPedido.AGUARDANDO_PAGAMENTO) {
+            System.out.print("Processar o PAGAMENTO deste pedido? (s/n): ");
+            String resposta = scanner.nextLine();
+            if (resposta.equalsIgnoreCase("s")) {
+                pedidoService.pagarPedido(pedidoSelecionado);
+            }
+        } else if (pedidoSelecionado.getStatus() == StatusPedido.PAGO) {
+            System.out.print("Processar a ENTREGA deste pedido? (s/n): ");
+            String resposta = scanner.nextLine();
+            if (resposta.equalsIgnoreCase("s")) {
+                pedidoService.entregarPedido(pedidoSelecionado);
+            }
+        } else {
+            System.out.println("O pedido selecionado não pode ser processado no momento (Status: " + pedidoSelecionado.getStatus() + ").");
         }
     }
 }
