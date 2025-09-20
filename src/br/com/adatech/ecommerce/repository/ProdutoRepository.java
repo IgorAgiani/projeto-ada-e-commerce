@@ -1,3 +1,7 @@
+package br.com.adatech.ecommerce.repository;
+
+import br.com.adatech.ecommerce.model.Produto;
+
 import java.util.ArrayList;
 import java.util.List;
 

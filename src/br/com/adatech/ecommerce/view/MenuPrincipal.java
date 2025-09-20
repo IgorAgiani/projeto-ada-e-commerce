@@ -1,3 +1,12 @@
+package br.com.adatech.ecommerce.view;
+
+import br.com.adatech.ecommerce.model.Cliente;
+import br.com.adatech.ecommerce.model.Produto;
+import br.com.adatech.ecommerce.repository.ClienteRepository;
+import br.com.adatech.ecommerce.repository.ProdutoRepository;
+import br.com.adatech.ecommerce.service.ClienteService;
+import br.com.adatech.ecommerce.service.ProdutoService;
+
 import java.util.Scanner;
 
 public class MenuPrincipal {
@@ -42,34 +51,34 @@ public class MenuPrincipal {
 
     private void menuClientes() {
         System.out.println("\n--- CLIENTES ---");
-        System.out.println("1 - Cadastrar Cliente");
+        System.out.println("1 - Cadastrar br.com.adatech.ecommerce.model.Cliente");
         System.out.println("2 - Listar Clientes");
-        System.out.println("3 - Atualizar Cliente");
+        System.out.println("3 - Atualizar br.com.adatech.ecommerce.model.Cliente");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
         scanner.nextLine();
 
         switch (opcao) {
-            case 1 -> clienteService.cadastrarCliente(scanner);
-            case 2 -> clienteService.listarClientes();
-            case 3 -> clienteService.atualizarCliente(scanner);
+            case 1 -> clienteService.cadastrar(scanner);
+            case 2 -> clienteService.listar();
+            case 3 -> clienteService.atualizar(scanner);
             default -> System.out.println("Opção inválida.");
         }
     }
 
     private void menuProdutosEstoque() {
         System.out.println("\n--- PRODUTOS EM ESTOQUE ---");
-        System.out.println("1 - Cadastrar Produto");
+        System.out.println("1 - Cadastrar br.com.adatech.ecommerce.model.Produto");
         System.out.println("2 - Listar Produtos");
-        System.out.println("3 - Atualizar Produto");
+        System.out.println("3 - Atualizar br.com.adatech.ecommerce.model.Produto");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
         scanner.nextLine(); // Limpa o buffer
 
         switch (opcao) {
-            case 1 -> produtoService.cadastrarProduto(scanner);
-            case 2 -> produtoService.listarProdutos();
-            case 3 -> produtoService.atualizarProduto(scanner);
+            case 1 -> produtoService.cadastrar(scanner);
+            case 2 -> produtoService.listar();
+            case 3 -> produtoService.atualizar(scanner);
             default -> System.out.println("Opção inválida.");
         }
     }

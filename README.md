@@ -16,21 +16,21 @@ O ADA Commerce simula um sistema de comércio com funcionalidades para:
 | Arquivo / Classe         | Descrição                                                                 |
 |--------------------------|---------------------------------------------------------------------------|
 | `Main.java`              | Ponto de entrada da aplicação                                             |
-| `MenuPrincipal.java`     | Interface de usuário via terminal para gerenciar clientes e produtos      |
-| `Cliente.java`           | Gerencia dados de clientes (nome, RG, e-mail)                             |
-| `Produto.java`           | Gerencia produtos com nome, preço e estoque                               |
-| `Pedido.java`            | Representa uma compra feita por um cliente com lista de itens             |
-| `ItemPedido.java`        | Representa cada item dentro de um pedido (produto, quantidade, preço)     |
-| `GerenciadorCadastro.java`| Interface genérica para operações CRUD                                   |
+| `br.com.adatech.ecommerce.view.MenuPrincipal.java`     | Interface de usuário via terminal para gerenciar clientes e produtos      |
+| `br.com.adatech.ecommerce.model.Cliente.java`           | Gerencia dados de clientes (nome, RG, e-mail)                             |
+| `br.com.adatech.ecommerce.model.Produto.java`           | Gerencia produtos com nome, preço e estoque                               |
+| `br.com.adatech.ecommerce.model.Pedido.java`            | Representa uma compra feita por um cliente com lista de itens             |
+| `br.com.adatech.ecommerce.model.ItemPedido.java`        | Representa cada item dentro de um pedido (produto, quantidade, preço)     |
+| `br.com.adatech.ecommerce.service.GerenciadorCadastro.java`| Interface genérica para operações CRUD                                   |
 
 ## 🔄 Uso de Interfaces e Generics
 
-O projeto utiliza a interface genérica `GerenciadorCadastro<T>` para padronizar operações de cadastro, listagem, atualização e salvamento. Isso promove reutilização de código e facilita a manutenção.
+O projeto utiliza a interface genérica `br.com.adatech.ecommerce.service.GerenciadorCadastro<T>` para padronizar operações de cadastro, listagem, atualização e salvamento. Isso promove reutilização de código e facilita a manutenção.
 
 ### Interface
 
 ```java
-public interface GerenciadorCadastro<T> {
+public interface br.com.adatech.ecommerce.service.GerenciadorCadastro<T> {
     void cadastrar(Scanner scanner);
     void cadastrar(T entidade);
     void salvar(T entidade);

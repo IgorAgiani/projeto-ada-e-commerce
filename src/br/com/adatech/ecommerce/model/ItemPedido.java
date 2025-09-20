@@ -1,15 +1,13 @@
+package br.com.adatech.ecommerce.model;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class ItemPedido implements GerenciadorCadastro <ItemPedido> {
+public class ItemPedido {
     private Produto produto;
     private int quantidade;
     private double precoVenda;
     private List<ItemPedido> listaPedidos = new ArrayList<>();
-
-    public ItemPedido() {
-    }
 
     public ItemPedido(Produto produto, int quantidade, double precoVenda) {
         this.produto = produto;
@@ -47,29 +45,5 @@ public class ItemPedido implements GerenciadorCadastro <ItemPedido> {
 
     public void setListaPedidos(List<ItemPedido> listaPedidos) {
         this.listaPedidos = listaPedidos;
-    }
-
-    @Override
-    public void cadastrar(Scanner scanner) {
-        // implementar
-    }
-
-    @Override
-    public void cadastrar(ItemPedido entidade) {
-        // implementar
-    }
-
-    @Override
-    public void salvar(ItemPedido entidade) {
-       // implementar
-    }
-
-    public void listar() {
-        // implementar
-    }
-
-    @Override
-    public void atualizar() {
-        // implementar
     }
 }

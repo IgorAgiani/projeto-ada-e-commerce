@@ -1,10 +1,10 @@
+package br.com.adatech.ecommerce.model;
+
 public class Produto {
     private String nome;
     private double precoInicial;
     private int quantidade;
 
-    public Produto() {
-    }
 
     public Produto(String nome, double precoInicial, int quantidade) {
         this.nome = nome;

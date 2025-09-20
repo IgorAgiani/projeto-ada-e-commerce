@@ -1,6 +1,7 @@
+package br.com.adatech.ecommerce.model;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Scanner;
 
 public class Pedido {
     private Cliente cliente;

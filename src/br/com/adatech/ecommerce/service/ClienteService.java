@@ -1,11 +1,13 @@
+package br.com.adatech.ecommerce.service;
+
+import br.com.adatech.ecommerce.model.Cliente;
+import br.com.adatech.ecommerce.repository.ClienteRepository;
+
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Serviço que contém as regras de negócio para as operações de Cliente.
- */
-public class ClienteService {
+public class ClienteService implements GerenciadorCadastro<Cliente> {
 
     private ClienteRepository clienteRepository;
 
@@ -13,8 +15,8 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public void cadastrarCliente(Scanner scanner) {
-        System.out.println("\n--- Cadastro de Novo Cliente ---");
+    public void cadastrar(Scanner scanner) {
+        System.out.println("\n--- Cadastro de Novo br.com.adatech.ecommerce.model.Cliente ---");
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
@@ -31,10 +33,10 @@ public class ClienteService {
 
         Cliente novoCliente = new Cliente(nome, rg, email);
         clienteRepository.salvar(novoCliente);
-        System.out.println("Cliente cadastrado com sucesso!");
+        System.out.println("br.com.adatech.ecommerce.model.Cliente cadastrado com sucesso!");
     }
 
-    public void listarClientes() {
+    public void listar() {
         System.out.println("\n--- Lista de Clientes ---");
         List<Cliente> clientes = clienteRepository.buscarTodos();
 
@@ -48,8 +50,8 @@ public class ClienteService {
         }
     }
 
-    public void atualizarCliente(Scanner scanner) {
-        listarClientes();
+    public void atualizar(Scanner scanner) {
+        listar();
 
         if (clienteRepository.buscarTodos().isEmpty()){
             return;
@@ -86,7 +88,7 @@ public class ClienteService {
                 cliente.setEmail(novoEmail);
             }
 
-            System.out.println("Cliente atualizado com sucesso!");
+            System.out.println("br.com.adatech.ecommerce.model.Cliente atualizado com sucesso!");
 
         } catch (InputMismatchException e) {
             System.out.println("Erro: Índice inválido. Por favor, digite um número.");

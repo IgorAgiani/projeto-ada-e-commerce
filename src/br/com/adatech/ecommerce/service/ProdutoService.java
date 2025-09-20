@@ -1,8 +1,13 @@
+package br.com.adatech.ecommerce.service;
+
+import br.com.adatech.ecommerce.model.Produto;
+import br.com.adatech.ecommerce.repository.ProdutoRepository;
+
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public class ProdutoService {
+public class ProdutoService implements GerenciadorCadastro<Produto> {
 
     private ProdutoRepository produtoRepository;
 
@@ -10,10 +15,10 @@ public class ProdutoService {
         this.produtoRepository = produtoRepository;
     }
 
-    public void cadastrarProduto(Scanner scanner) {
-        System.out.println("\n--- Cadastro de Novo Produto ---");
+    public void cadastrar(Scanner scanner) {
+        System.out.println("\n--- Cadastro de Novo br.com.adatech.ecommerce.model.Produto ---");
         try {
-            System.out.print("Nome do Produto: ");
+            System.out.print("Nome do br.com.adatech.ecommerce.model.Produto: ");
             String nome = scanner.nextLine();
 
             System.out.print("Quantidade em estoque: ");
@@ -30,7 +35,7 @@ public class ProdutoService {
 
             Produto produto = new Produto(nome, preco, quantidade);
             produtoRepository.salvar(produto);
-            System.out.println("Produto cadastrado com sucesso!");
+            System.out.println("br.com.adatech.ecommerce.model.Produto cadastrado com sucesso!");
 
         } catch (InputMismatchException e) {
             System.out.println("Erro: Entrada inválida. Por favor, insira os dados no formato correto.");
@@ -38,7 +43,7 @@ public class ProdutoService {
         }
     }
 
-    public void listarProdutos() {
+    public void listar() {
         System.out.println("\n--- Lista de Produtos em Estoque ---");
         List<Produto> produtos = produtoRepository.buscarTodos();
         if (produtos.isEmpty()) {
@@ -50,8 +55,8 @@ public class ProdutoService {
         }
     }
 
-    public void atualizarProduto(Scanner scanner) {
-        listarProdutos();
+    public void atualizar(Scanner scanner) {
+        listar();
 
         if (produtoRepository.buscarTodos().isEmpty()){
             return;
@@ -87,7 +92,7 @@ public class ProdutoService {
                 produto.setPrecoInicial(Double.parseDouble(novoPrecoInput));
             }
 
-            System.out.println("Produto atualizado com sucesso!");
+            System.out.println("br.com.adatech.ecommerce.model.Produto atualizado com sucesso!");
 
         } catch (InputMismatchException e) {
             System.out.println("Erro: Índice inválido. Por favor, digite um número.");

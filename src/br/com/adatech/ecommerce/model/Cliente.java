@@ -1,11 +1,9 @@
+package br.com.adatech.ecommerce.model;
+
 public class Cliente {
     private String nome;
     private String rg;
     private String email;
-
-
-    public Cliente () {
-    }
 
     public Cliente(String nome, String documentoObrigatorio, String email) {
         this.nome = nome;
