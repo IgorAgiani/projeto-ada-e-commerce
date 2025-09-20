@@ -2,11 +2,11 @@ import java.util.Scanner;
 
 public class MenuPrincipal {
     private Scanner scanner = new Scanner(System.in);
-    private Produto produto = new Produto();
-    private Cliente cliente = new Cliente();
+    private ClienteRepository clienteRepository = new ClienteRepository();
+    private ProdutoRepository produtoRepository = new ProdutoRepository();
 
-    Cliente igor = new Cliente("Igor", "12.456.789-00", "igor@email.com");
-    Cliente maria = new Cliente("Maria", "98.654.321-00", "maria@email.com");
+    private ClienteService clienteService = new ClienteService(clienteRepository);
+    private ProdutoService produtoService = new ProdutoService(produtoRepository);
 
     Produto notebook = new Produto("Notebook", 2500.00, 50);
     Produto smartphone = new Produto("Smartphone", 1500.00, 50);
@@ -15,12 +15,8 @@ public class MenuPrincipal {
 
     public void iniciar() {
 
-        cliente.salvar(igor);
-        cliente.salvar(maria);
-
-        produto.salvar(notebook);
-        produto.salvar(smartphone);
-        produto.salvar(tablet);
+        clienteRepository.salvar(new Cliente("Igor", "12.456.789-00", "igor@email.com"));
+        clienteRepository.salvar(new Cliente("Maria", "98.654.321-00", "maria@email.com"));
 
         int opcao = -1;
         while (opcao != 0) {
@@ -52,13 +48,13 @@ public class MenuPrincipal {
 
         switch (opcao) {
             case 1:
-                cliente.cadastrar(scanner);
+                clienteService.cadastrarCliente(scanner);
                 break;
             case 2:
-                cliente.listar();
+                clienteService.listarClientes();
                 break;
             case 3:
-                cliente.atualizar();
+                clienteService.atualizarCliente();
                 break;
             default:
                 System.out.println("Opção inválida.");
@@ -77,13 +73,13 @@ public class MenuPrincipal {
 
         switch (opcao) {
                 case 1:
-                    produto.cadastrar(scanner);
+                    produtoService.cadastrarProduto(scanner);
                     break;
                 case 2:
-                    produto.listar();
+                    produtoService.listarProdutos();
                     break;
                 case 3:
-                    produto.atualizar();
+                    produtoService.atualizarProduto(scanner);
                     break;
                 default:
                     System.out.println("Opção inválida.");
