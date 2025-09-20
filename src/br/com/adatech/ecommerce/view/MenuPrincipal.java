@@ -96,8 +96,32 @@ public class MenuPrincipal {
         }
     }
 
-    private void gerenciarItensDoPedido(Pedido pedido) {
-        System.out.println("\n--- Gerenciando Itens do Pedido ---");
-        System.out.println("A FAZER: Adicionar, remover, alterar itens...");
+
+    private void gerenciarItensDoPedido (Pedido pedido){
+        int opcao = -1;
+        while (opcao != 0) {
+            System.out.println("\n--- Gerenciando Pedido de " + pedido.getCliente().getNome() + " ---");
+            System.out.println("Status: " + pedido.getStatus() + " | Itens: " + pedido.getItens().size() + " | Valor Total: R$" + pedido.getValorTotal());
+            System.out.println("1 - Adicionar Item");
+            System.out.println("2 - Alterar Quantidade de um Item");
+            System.out.println("3 - Remover Item");
+            System.out.println("4 - Finalizar Pedido"); // Próximo grande passo
+            System.out.println("0 - Cancelar Pedido");
+            System.out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine(); // Limpa o buffer
+
+            switch (opcao) {
+                case 1 -> pedidoService.adicionarItem(pedido, scanner, produtoService);
+                case 2 ->
+                        System.out.println("Funcionalidade a implementar..."); // pedidoService.alterarQuantidade(...)
+                case 3 -> System.out.println("Funcionalidade a implementar..."); // pedidoService.removerItem(...)
+                case 4 ->
+                        System.out.println("Funcionalidade a implementar..."); // pedidoService.finalizarPedido(...)
+                case 0 -> System.out.println("Pedido cancelado.");
+                default -> System.out.println("Opção inválida.");
+            }
+        }
     }
 }
