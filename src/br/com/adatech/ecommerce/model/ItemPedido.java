@@ -1,13 +1,9 @@
 package br.com.adatech.ecommerce.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ItemPedido {
     private Produto produto;
     private int quantidade;
     private double precoVenda;
-    private List<ItemPedido> listaPedidos = new ArrayList<>();
 
     public ItemPedido(Produto produto, int quantidade, double precoVenda) {
         this.produto = produto;
@@ -39,11 +35,12 @@ public class ItemPedido {
         this.precoVenda = precoVenda;
     }
 
-    public List<ItemPedido> getListaPedidos() {
-        return listaPedidos;
+    public double getSubtotal() {
+        return this.quantidade * this.precoVenda;
     }
 
-    public void setListaPedidos(List<ItemPedido> listaPedidos) {
-        this.listaPedidos = listaPedidos;
+    @Override
+    public String toString() {
+        return produto.getNome() + " | Qtd: " + quantidade + " | Preço Un.: R$" + precoVenda + " | Subtotal: R$" + getSubtotal();
     }
 }

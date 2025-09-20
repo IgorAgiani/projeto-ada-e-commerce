@@ -1,24 +1,23 @@
 package br.com.adatech.ecommerce.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pedido {
     private Cliente cliente;
     private LocalDate dataCriacao;
-    private double valorTotal;
-    private String statusPagamento;
+    private StatusPedido status;
     private List<ItemPedido> itens;
 
     public Pedido() {
     }
 
-    public Pedido(Cliente cliente, LocalDate dataCriacao, double valorTotal, String statusPagamento, List<ItemPedido> itens) {
+    public Pedido(Cliente cliente) {
         this.cliente = cliente;
-        this.dataCriacao = dataCriacao;
-        this.valorTotal = valorTotal;
-        this.statusPagamento = statusPagamento;
-        this.itens = itens;
+        this.dataCriacao = LocalDate.now();
+        this.status = StatusPedido.ABERTO;
+        this.itens = new ArrayList<>();
     }
 
     public Cliente getCliente() {
@@ -29,6 +28,22 @@ public class Pedido {
         this.cliente = cliente;
     }
 
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public StatusPedido getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusPedido status) {
+        this.status = status;
+    }
+
     public List<ItemPedido> getItens() {
         return itens;
     }
@@ -37,27 +52,12 @@ public class Pedido {
         this.itens = itens;
     }
 
-    public String getStatusPagamento() {
-        return statusPagamento;
-    }
-
-    public void setStatusPagamento(String statusPagamento) {
-        this.statusPagamento = statusPagamento;
-    }
-
     public double getValorTotal() {
-        return valorTotal;
+        double total = 0.0;
+        for (ItemPedido item : this.itens) {
+            total += item.getSubtotal();
+        }
+        return total;
     }
 
-    public void setValorTotal(double valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
 }

@@ -1,10 +1,13 @@
 package br.com.adatech.ecommerce.view;
 
 import br.com.adatech.ecommerce.model.Cliente;
+import br.com.adatech.ecommerce.model.Pedido;
 import br.com.adatech.ecommerce.model.Produto;
 import br.com.adatech.ecommerce.repository.ClienteRepository;
+import br.com.adatech.ecommerce.repository.PedidoRepository;
 import br.com.adatech.ecommerce.repository.ProdutoRepository;
 import br.com.adatech.ecommerce.service.ClienteService;
+import br.com.adatech.ecommerce.service.PedidoService;
 import br.com.adatech.ecommerce.service.ProdutoService;
 
 import java.util.Scanner;
@@ -14,9 +17,12 @@ public class MenuPrincipal {
 
     private ClienteRepository clienteRepository = new ClienteRepository();
     private ProdutoRepository produtoRepository = new ProdutoRepository();
+    private PedidoRepository pedidoRepository = new PedidoRepository();
 
     private ClienteService clienteService = new ClienteService(clienteRepository);
     private ProdutoService produtoService = new ProdutoService(produtoRepository);
+    private PedidoService pedidoService = new PedidoService(pedidoRepository, clienteRepository, produtoRepository);
+
 
     public void iniciar() {
 
@@ -84,6 +90,14 @@ public class MenuPrincipal {
     }
 
     private void menuVenda() {
-        System.out.println("\nFuncionalidade de venda a ser implementada...");
+        Pedido pedidoAtual = pedidoService.iniciarVenda(clienteService, scanner);
+        if (pedidoAtual != null) {
+            gerenciarItensDoPedido(pedidoAtual);
+        }
+    }
+
+    private void gerenciarItensDoPedido(Pedido pedido) {
+        System.out.println("\n--- Gerenciando Itens do Pedido ---");
+        System.out.println("A FAZER: Adicionar, remover, alterar itens...");
     }
 }
