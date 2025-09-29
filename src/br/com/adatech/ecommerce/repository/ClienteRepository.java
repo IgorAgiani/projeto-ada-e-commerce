@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClienteRepository {
+
     private List<Cliente> clientes = new ArrayList<>();
 
     public void salvar(Cliente cliente) {
@@ -22,4 +23,11 @@ public class ClienteRepository {
         }
         return null; // Ou lançar uma exceção
     }
+
+    public void atualizar(int index, Cliente clienteAtualizado) {
+        if (index >= 0 && index < clientes.size()) {
+            this.clientes.set(index, clienteAtualizado);
+        }
+    }
+
 }

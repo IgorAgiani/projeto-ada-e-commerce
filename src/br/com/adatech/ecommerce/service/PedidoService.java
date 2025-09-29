@@ -44,7 +44,7 @@ public class PedidoService {
         Pedido novoPedido = new Pedido(clienteSelecionado);
         pedidoRepository.salvar(novoPedido);
 
-        System.out.println("Pedido criado para o cliente: " + clienteSelecionado.getNome());
+        System.out.println("Pedido criado para o cliente: " + clienteSelecionado.nome());
         System.out.println("Status do Pedido: " + novoPedido.getStatus());
 
         return novoPedido;
@@ -116,7 +116,6 @@ public class PedidoService {
             return;
         }
 
-        // Mostra os itens atuais com seus índices
         System.out.println("Itens atuais no pedido:");
         for (int i = 0; i < pedido.getItens().size(); i++) {
             System.out.println(i + " - " + pedido.getItens().get(i));
@@ -199,8 +198,8 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
 
         System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
-        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().getNome() + " por e-mail (" + pedido.getCliente().getEmail() + "):");
-        System.out.println(">> Olá, " + pedido.getCliente().getNome() + "! Seu pedido de R$" + pedido.getValorTotal() + " foi recebido e está aguardando pagamento.");
+        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().nome() + " por e-mail (" + pedido.getCliente().email() + "):");
+        System.out.println(">> Olá, " + pedido.getCliente().nome() + "! Seu pedido de R$" + pedido.getValorTotal() + " foi recebido e está aguardando pagamento.");
 
         return true;
     }
@@ -214,8 +213,8 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.PAGO);
         System.out.println("\nPagamento processado com sucesso!");
         System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
-        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().getNome() + " por e-mail (" + pedido.getCliente().getEmail() + "):");
-        System.out.println(">> Olá, " + pedido.getCliente().getNome() + "! O pagamento do seu pedido foi confirmado. Em breve, ele será enviado para entrega.");
+        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().nome() + " por e-mail (" + pedido.getCliente().email() + "):");
+        System.out.println(">> Olá, " + pedido.getCliente().nome() + "! O pagamento do seu pedido foi confirmado. Em breve, ele será enviado para entrega.");
     }
 
     public void entregarPedido(Pedido pedido) {
@@ -227,7 +226,7 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.FINALIZADO);
         System.out.println("\nPedido enviado para entrega!");
         System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
-        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().getNome() + " por e-mail (" + pedido.getCliente().getEmail() + "):");
-        System.out.println(">> Olá, " + pedido.getCliente().getNome() + "! Seu pedido saiu para entrega. Obrigado por comprar na Ada Commerce!");
+        System.out.println("Notificação enviada para o cliente " + pedido.getCliente().nome() + " por e-mail (" + pedido.getCliente().email() + "):");
+        System.out.println(">> Olá, " + pedido.getCliente().nome() + "! Seu pedido saiu para entrega. Obrigado por comprar na Ada Commerce!");
     }
 }

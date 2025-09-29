@@ -103,7 +103,7 @@ public class MenuPrincipal {
     private void gerenciarItensDoPedido (Pedido pedido){
         int opcao = -1;
         while (opcao != 0 && pedido.getStatus() == StatusPedido.ABERTO) {
-            System.out.println("\n--- Gerenciando Pedido de " + pedido.getCliente().getNome() + " ---");
+            System.out.println("\n--- Gerenciando Pedido de " + pedido.getCliente().nome() + " ---");
             System.out.println("Status: " + pedido.getStatus() + " | Itens: " + pedido.getItens().size() + " | Valor Total: R$" + pedido.getValorTotal());
             System.out.println("1 - Adicionar Item");
             System.out.println("2 - Alterar Quantidade de um Item");
@@ -139,7 +139,7 @@ public class MenuPrincipal {
 
         for (int i = 0; i < todosOsPedidos.size(); i++) {
             Pedido p = todosOsPedidos.get(i);
-            System.out.println(i + " - Cliente: " + p.getCliente().getNome() + " | Status: " + p.getStatus() + " | Valor: R$" + p.getValorTotal());
+            System.out.println(i + " - Cliente: " + p.getCliente().nome() + " | Status: " + p.getStatus() + " | Valor: R$" + p.getValorTotal());
         }
 
         System.out.print("\nEscolha o índice do pedido que deseja processar: ");
