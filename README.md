@@ -1,6 +1,6 @@
 # Projeto de Estudos Ada Tech - E-Commerce
 
-![Status](https://img.shields.io/badge/Status-Concluído-brightgreen)
+![Status](https://img.shields.io/badge/Status-Em%20Construção-orange)
 
 Sistema de gerenciamento de clientes, produtos e vendas, desenvolvido como um case de estudo para a imersão backend da Ada Tech. O projeto foi construído em Java com foco na aplicação prática dos **princípios SOLID** e de uma arquitetura limpa e desacoplada (Service-Repository).
 
