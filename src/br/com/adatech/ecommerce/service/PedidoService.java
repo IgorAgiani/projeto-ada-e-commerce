@@ -129,7 +129,7 @@ public class PedidoService {
 
             if (indice >= 0 && indice < pedido.getItens().size()) {
                 ItemPedido itemRemovido = pedido.getItens().remove(indice);
-                System.out.println("Item removido com sucesso: " + itemRemovido.getProduto().getNome());
+                System.out.println("Item removido com sucesso: " + itemRemovido.produto().getNome());
             } else {
                 System.out.println("Erro: Índice inválido.");
             }
@@ -162,14 +162,15 @@ public class PedidoService {
             scanner.nextLine();
 
             if (indice >= 0 && indice < pedido.getItens().size()) {
-                ItemPedido itemParaAlterar = pedido.getItens().get(indice);
+                ItemPedido itemAntigo = pedido.getItens().get(indice);
 
-                System.out.print("Digite a nova quantidade para '" + itemParaAlterar.getProduto().getNome() + "': ");
+                System.out.print("Digite a nova quantidade para '" + itemAntigo.produto().getNome() + "': ");
                 int novaQuantidade = scanner.nextInt();
                 scanner.nextLine();
 
                 if (novaQuantidade > 0) {
-                    itemParaAlterar.setQuantidade(novaQuantidade);
+                    ItemPedido itemAtualizado = new ItemPedido(itemAntigo.produto(), novaQuantidade, itemAntigo.precoVenda());
+                    pedido.getItens().set(indice, itemAtualizado);
                     System.out.println("Quantidade alterada com sucesso!");
                 } else {
                     System.out.println("Erro: A quantidade deve ser maior que zero. Para remover o item, use a opção 3.");
