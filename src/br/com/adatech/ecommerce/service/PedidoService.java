@@ -85,10 +85,10 @@ public class PedidoService {
                 return;
             }
 
-            System.out.print("Digite o preço de venda (pressione ENTER para usar o preço padrão de R$" + produtoSelecionado.getPrecoInicial() + "): ");
+            System.out.print("Digite o preço de venda (pressione ENTER para usar o preço padrão de R$" + produtoSelecionado.precoInicial() + "): ");
             String precoVendaInput = scanner.nextLine();
 
-            double precoVenda = produtoSelecionado.getPrecoInicial();
+            double precoVenda = produtoSelecionado.precoInicial();
             if (!precoVendaInput.isEmpty()) {
                 precoVenda = Double.parseDouble(precoVendaInput);
             }
@@ -128,7 +128,7 @@ public class PedidoService {
 
             if (indice >= 0 && indice < pedido.getItens().size()) {
                 ItemPedido itemRemovido = pedido.getItens().remove(indice);
-                System.out.println("Item removido com sucesso: " + itemRemovido.produto().getNome());
+                System.out.println("Item removido com sucesso: " + itemRemovido.produto().nome());
             } else {
                 System.out.println("Erro: Índice inválido.");
             }
@@ -163,7 +163,7 @@ public class PedidoService {
             if (indice >= 0 && indice < pedido.getItens().size()) {
                 ItemPedido itemAntigo = pedido.getItens().get(indice);
 
-                System.out.print("Digite a nova quantidade para '" + itemAntigo.produto().getNome() + "': ");
+                System.out.print("Digite a nova quantidade para '" + itemAntigo.produto().nome() + "': ");
                 int novaQuantidade = scanner.nextInt();
                 scanner.nextLine();
 

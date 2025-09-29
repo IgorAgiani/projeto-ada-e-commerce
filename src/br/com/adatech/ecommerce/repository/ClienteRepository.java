@@ -21,7 +21,7 @@ public class ClienteRepository {
         if (index >= 0 && index < clientes.size()) {
             return clientes.get(index);
         }
-        return null; // Ou lançar uma exceção
+        return null;
     }
 
     public void atualizar(int index, Cliente clienteAtualizado) {

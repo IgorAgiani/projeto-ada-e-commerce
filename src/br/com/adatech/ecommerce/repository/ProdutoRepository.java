@@ -22,4 +22,11 @@ public class ProdutoRepository {
         }
         return null;
     }
+
+    public void atualizar(int index, Produto produtoAtualizado) {
+        if (index >= 0 && index < this.produtos.size()) { // 'produtos' seria sua lista interna
+            this.produtos.set(index, produtoAtualizado);
+        }
+    }
+
 }

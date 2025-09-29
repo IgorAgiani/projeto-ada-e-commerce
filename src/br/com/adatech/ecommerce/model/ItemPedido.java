@@ -8,6 +8,6 @@ public record ItemPedido(Produto produto, int quantidade, double precoVenda) {
 
     @Override
     public String toString() {
-        return produto.getNome() + " | Qtd: " + quantidade + " | Preço Un.: R$" + precoVenda + " | Subtotal: R$" + getSubtotal();
+        return produto.nome() + " | Qtd: " + quantidade + " | Preço Un.: R$" + precoVenda + " | Subtotal: R$" + getSubtotal();
     }
 }
