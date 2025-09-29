@@ -36,7 +36,6 @@ O ADA Commerce simula um sistema de e-commerce via console com um ciclo de vida 
 - **Java 21**
 - **Programação Orientada a Objetos**
 - **Princípios SOLID**
-- **Design Patterns:** Service Layer, Repository, Dependency Injection
 - **Generics**
 
 ---
