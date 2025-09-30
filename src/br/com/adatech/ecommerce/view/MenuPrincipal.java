@@ -60,9 +60,9 @@ public class MenuPrincipal {
 
     private void menuClientes() {
         System.out.println("\n--- CLIENTES ---");
-        System.out.println("1 - Cadastrar br.com.adatech.ecommerce.model.Cliente");
+        System.out.println("1 - Cadastrar");
         System.out.println("2 - Listar Clientes");
-        System.out.println("3 - Atualizar br.com.adatech.ecommerce.model.Cliente");
+        System.out.println("3 - Atualizar");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
         scanner.nextLine();
@@ -77,9 +77,9 @@ public class MenuPrincipal {
 
     private void menuProdutosEstoque() {
         System.out.println("\n--- PRODUTOS EM ESTOQUE ---");
-        System.out.println("1 - Cadastrar br.com.adatech.ecommerce.model.Produto");
+        System.out.println("1 - Cadastrar");
         System.out.println("2 - Listar Produtos");
-        System.out.println("3 - Atualizar br.com.adatech.ecommerce.model.Produto");
+        System.out.println("3 - Atualizar");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
         scanner.nextLine(); // Limpa o buffer
