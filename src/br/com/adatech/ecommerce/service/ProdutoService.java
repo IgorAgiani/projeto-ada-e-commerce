@@ -16,17 +16,22 @@ public class ProdutoService implements GerenciadorCadastro<Produto> {
     }
 
     public void cadastrar(Scanner scanner) {
-        System.out.println("\n--- Cadastro de Novo br.com.adatech.ecommerce.model.Produto ---");
+        System.out.println("\n--- Cadastro de Novo Produto ---");
         try {
-            System.out.print("Nome do br.com.adatech.ecommerce.model.Produto: ");
+            System.out.print("Nome do Produto: ");
             String nome = scanner.nextLine();
+
+            if (produtoRepository.buscarPorNome(nome) != null) {
+                System.out.println("Erro: Já existe um produto com o nome '" + nome + "'. Cadastro cancelado.");
+                return;
+            }
 
             System.out.print("Quantidade em estoque: ");
             int quantidade = scanner.nextInt();
 
             System.out.print("Preço: ");
             double preco = scanner.nextDouble();
-            scanner.nextLine();
+            scanner.nextLine(); // Limpa o buffer
 
             if (nome.isEmpty()) {
                 System.out.println("Nome do produto é obrigatório. Cadastro cancelado.");
@@ -35,7 +40,7 @@ public class ProdutoService implements GerenciadorCadastro<Produto> {
 
             Produto produto = new Produto(nome, preco, quantidade);
             produtoRepository.salvar(produto);
-            System.out.println("br.com.adatech.ecommerce.model.Produto cadastrado com sucesso!");
+            System.out.println("Produto cadastrado com sucesso!");
 
         } catch (InputMismatchException e) {
             System.out.println("Erro: Entrada inválida. Por favor, insira os dados no formato correto.");
@@ -50,31 +55,22 @@ public class ProdutoService implements GerenciadorCadastro<Produto> {
             System.out.println("Nenhum produto cadastrado.");
             return;
         }
-        for (int i = 0; i < produtos.size(); i++) {
-            System.out.println(i + " - " + produtos.get(i));
-        }
+        produtos.forEach(System.out::println);
     }
 
     public void atualizar(Scanner scanner) {
-        listar();
+        System.out.print("\nDigite o nome do produto que deseja atualizar: ");
+        String nomeProduto = scanner.nextLine();
 
-        if (produtoRepository.buscarTodos().isEmpty()) {
+        Produto produtoAntigo = produtoRepository.buscarPorNome(nomeProduto);
+
+        if (produtoAntigo == null) {
+            System.out.println("Erro: Produto '" + nomeProduto + "' não encontrado.");
             return;
         }
 
         try {
-            System.out.print("\nEscolha o índice do produto que deseja atualizar: ");
-            int index = scanner.nextInt();
-            scanner.nextLine();
-
-            Produto produtoAntigo = produtoRepository.buscarPorIndice(index);
-            if (produtoAntigo == null) {
-                System.out.println("Índice inválido.");
-                return;
-            }
-
-            System.out.println("Deixe em branco para não alterar.");
-
+            System.out.println("Deixe em branco para não alterar. Produto encontrado: " + produtoAntigo);
             System.out.print("Novo nome (atual: " + produtoAntigo.nome() + "): ");
             String novoNomeInput = scanner.nextLine();
 
@@ -85,26 +81,21 @@ public class ProdutoService implements GerenciadorCadastro<Produto> {
             String novoPrecoInput = scanner.nextLine();
 
             String nomeFinal = novoNomeInput.isEmpty() ? produtoAntigo.nome() : novoNomeInput;
-
-            int quantidadeFinal = novaQuantidadeInput.isEmpty()
-                    ? produtoAntigo.quantidade()
-                    : Integer.parseInt(novaQuantidadeInput);
-
-            double precoFinal = novoPrecoInput.isEmpty()
-                    ? produtoAntigo.precoInicial()
-                    : Double.parseDouble(novoPrecoInput);
+            int quantidadeFinal = novaQuantidadeInput.isEmpty() ? produtoAntigo.quantidade() : Integer.parseInt(novaQuantidadeInput);
+            double precoFinal = novoPrecoInput.isEmpty() ? produtoAntigo.precoInicial() : Double.parseDouble(novoPrecoInput);
 
             Produto produtoAtualizado = new Produto(nomeFinal, precoFinal, quantidadeFinal);
 
-            produtoRepository.atualizar(index, produtoAtualizado);
+            if (!nomeFinal.equals(produtoAntigo.nome())) {
+                produtoRepository.remover(produtoAntigo.nome());
+            }
+
+            produtoRepository.salvar(produtoAtualizado);
 
             System.out.println("Produto atualizado com sucesso!");
 
-        } catch (InputMismatchException e) {
-            System.out.println("Erro: Índice inválido. Por favor, digite um número.");
-            scanner.nextLine();
         } catch (NumberFormatException e) {
-            System.out.println("Erro: Número em formato inválido. A atualização foi cancelada.");
+            System.out.println("Erro: Formato de número inválido. A atualização foi cancelada.");
         }
     }
 }

@@ -3,30 +3,27 @@ package br.com.adatech.ecommerce.repository;
 import br.com.adatech.ecommerce.model.Produto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProdutoRepository {
-    private List<Produto> produtos = new ArrayList<>();
+
+    private Map<String, Produto> produtos = new HashMap<>();
 
     public void salvar(Produto produto) {
-        this.produtos.add(produto);
+        this.produtos.put(produto.nome(), produto);
     }
 
     public List<Produto> buscarTodos() {
-        return this.produtos;
+        return new ArrayList<>(this.produtos.values());
     }
 
-    public Produto buscarPorIndice(int index) {
-        if (index >= 0 && index < produtos.size()) {
-            return produtos.get(index);
-        }
-        return null;
+    public Produto buscarPorNome(String nome) {
+        return this.produtos.get(nome);
     }
 
-    public void atualizar(int index, Produto produtoAtualizado) {
-        if (index >= 0 && index < this.produtos.size()) { // 'produtos' seria sua lista interna
-            this.produtos.set(index, produtoAtualizado);
-        }
+    public void remover(String nome) {
+        this.produtos.remove(nome);
     }
-
 }

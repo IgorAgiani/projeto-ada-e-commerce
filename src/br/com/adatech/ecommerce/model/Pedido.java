@@ -2,16 +2,14 @@ package br.com.adatech.ecommerce.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Pedido {
-    private Cliente cliente;
-    private LocalDate dataCriacao;
+    private final Cliente cliente;
+    private final LocalDate dataCriacao;
     private StatusPedido status;
     private List<ItemPedido> itens;
-
-    public Pedido() {
-    }
 
     public Pedido(Cliente cliente) {
         this.cliente = cliente;
@@ -24,39 +22,69 @@ public class Pedido {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
     public LocalDate getDataCriacao() {
         return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
     }
 
     public StatusPedido getStatus() {
         return status;
     }
 
-    public void setStatus(StatusPedido status) {
-        this.status = status;
-    }
-
     public List<ItemPedido> getItens() {
-        return itens;
+        return Collections.unmodifiableList(itens);
     }
 
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
+    public void adicionarItem(ItemPedido novoItem) {
+        for (int i = 0; i < this.itens.size(); i++) {
+            ItemPedido itemExistente = this.itens.get(i);
+            if (itemExistente.produto().equals(novoItem.produto())) {
+                int novaQuantidade = itemExistente.quantidade() + novoItem.quantidade();
+                ItemPedido itemAtualizado = new ItemPedido(itemExistente.produto(), novaQuantidade, itemExistente.precoVenda());
+                this.itens.set(i, itemAtualizado);
+                return;
+            }
+        }
+        this.itens.add(novoItem);
+    }
+
+    public boolean removerItem(ItemPedido item) {
+        return this.itens.remove(item);
     }
 
     public double getValorTotal() {
-        double total = 0.0;
-        for (ItemPedido item : this.itens) {
-            total += item.getSubtotal();
+        return this.itens.stream()
+                .mapToDouble(item -> item.quantidade() * item.precoVenda())
+                .sum();
+    }
+
+    public void atualizarItem(ItemPedido itemAtualizado) {
+        for (int i = 0; i < this.itens.size(); i++) {
+            if (this.itens.get(i).produto().equals(itemAtualizado.produto())) {
+                this.itens.set(i, itemAtualizado);
+                return;
+            }
         }
-        return total;
+    }
+
+    public void finalizar() {
+        if (this.status == StatusPedido.ABERTO) {
+            this.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+        }
+    }
+
+    public void pagar() {
+        if (this.status == StatusPedido.AGUARDANDO_PAGAMENTO) {
+            this.setStatus(StatusPedido.PAGO);
+        }
+    }
+
+    public void entregar() {
+        if (this.status == StatusPedido.PAGO) {
+            this.setStatus(StatusPedido.FINALIZADO);
+        }
+    }
+
+    void setStatus(StatusPedido status) {
+        this.status = status;
     }
 }

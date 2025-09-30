@@ -57,7 +57,7 @@ public class PedidoService {
         }
 
         System.out.println("\n--- Adicionar Item ao Pedido ---");
-        System.out.println("Selecione um produto da lista:");
+        System.out.println("Produtos disponíveis:");
         produtoService.listar();
 
         if (produtoRepository.buscarTodos().isEmpty()) {
@@ -65,14 +65,13 @@ public class PedidoService {
         }
 
         try {
-            System.out.print("Digite o índice do produto: ");
-            int indiceProduto = scanner.nextInt();
-            scanner.nextLine();
+            System.out.print("\nDigite o nome do produto que deseja adicionar: ");
+            String nomeProduto = scanner.nextLine();
 
-            Produto produtoSelecionado = produtoRepository.buscarPorIndice(indiceProduto);
+            Produto produtoSelecionado = produtoRepository.buscarPorNome(nomeProduto);
 
             if (produtoSelecionado == null) {
-                System.out.println("Erro: Produto inválido.");
+                System.out.println("Erro: Produto não encontrado.");
                 return;
             }
 
@@ -87,95 +86,86 @@ public class PedidoService {
 
             System.out.print("Digite o preço de venda (pressione ENTER para usar o preço padrão de R$" + produtoSelecionado.precoInicial() + "): ");
             String precoVendaInput = scanner.nextLine();
-
             double precoVenda = produtoSelecionado.precoInicial();
             if (!precoVendaInput.isEmpty()) {
                 precoVenda = Double.parseDouble(precoVendaInput);
             }
 
             ItemPedido novoItem = new ItemPedido(produtoSelecionado, quantidade, precoVenda);
-            pedido.getItens().add(novoItem);
+            pedido.adicionarItem(novoItem);
 
             System.out.println("Item adicionado com sucesso: " + novoItem);
 
         } catch (Exception e) {
             System.out.println("Ocorreu um erro ao adicionar o item. Verifique os dados digitados.");
-            scanner.nextLine(); // Limpa o buffer em caso de erro
+            scanner.nextLine();
         }
     }
 
     public void removerItem(Pedido pedido, Scanner scanner) {
         if (pedido.getStatus() != StatusPedido.ABERTO) {
-            System.out.println("Este pedido não está aberto e não pode ser modificado.");
             return;
         }
 
         System.out.println("\n--- Remover Item do Pedido ---");
         if (pedido.getItens().isEmpty()) {
-            System.out.println("O pedido não contém itens para remover.");
             return;
         }
 
         System.out.println("Itens atuais no pedido:");
-        for (int i = 0; i < pedido.getItens().size(); i++) {
-            System.out.println(i + " - " + pedido.getItens().get(i));
-        }
+        pedido.getItens().forEach(System.out::println);
 
-        try {
-            System.out.print("Digite o índice do item que deseja remover: ");
-            int indice = scanner.nextInt();
-            scanner.nextLine();
+        System.out.print("\nDigite o nome do produto que deseja remover do pedido: ");
+        String nomeProdutoParaRemover = scanner.nextLine();
 
-            if (indice >= 0 && indice < pedido.getItens().size()) {
-                ItemPedido itemRemovido = pedido.getItens().remove(indice);
-                System.out.println("Item removido com sucesso: " + itemRemovido.produto().nome());
-            } else {
-                System.out.println("Erro: Índice inválido.");
-            }
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro. Por favor, digite um número válido.");
-            scanner.nextLine();
+        boolean foiRemovido = pedido.getItens().removeIf(
+                item -> item.produto().nome().equalsIgnoreCase(nomeProdutoParaRemover)
+        );
+
+        if (foiRemovido) {
+            System.out.println("Item '" + nomeProdutoParaRemover + "' removido com sucesso!");
+        } else {
+            System.out.println("Erro: Item não encontrado no pedido.");
         }
     }
 
     public void alterarQuantidadeItem(Pedido pedido, Scanner scanner) {
         if (pedido.getStatus() != StatusPedido.ABERTO) {
-            System.out.println("Este pedido não está aberto e não pode ser modificado.");
             return;
         }
-
         System.out.println("\n--- Alterar Quantidade do Item ---");
         if (pedido.getItens().isEmpty()) {
-            System.out.println("O pedido não contém itens para alterar.");
             return;
         }
 
         System.out.println("Itens atuais no pedido:");
-        for (int i = 0; i < pedido.getItens().size(); i++) {
-            System.out.println(i + " - " + pedido.getItens().get(i));
+        pedido.getItens().forEach(System.out::println);
+
+        System.out.print("\nDigite o nome do produto que deseja alterar a quantidade: ");
+        String nomeProduto = scanner.nextLine();
+
+        ItemPedido itemAntigo = pedido.getItens().stream()
+                .filter(item -> item.produto().nome().equalsIgnoreCase(nomeProduto))
+                .findFirst()
+                .orElse(null);
+
+        if (itemAntigo == null) {
+            System.out.println("Erro: Item não encontrado no pedido.");
+            return;
         }
 
         try {
-            System.out.print("Digite o índice do item que deseja alterar: ");
-            int indice = scanner.nextInt();
+            System.out.print("Digite a nova quantidade para '" + itemAntigo.produto().nome() + "': ");
+            int novaQuantidade = scanner.nextInt();
             scanner.nextLine();
 
-            if (indice >= 0 && indice < pedido.getItens().size()) {
-                ItemPedido itemAntigo = pedido.getItens().get(indice);
+            if (novaQuantidade > 0) {
+                ItemPedido itemAtualizado = new ItemPedido(itemAntigo.produto(), novaQuantidade, itemAntigo.precoVenda());
 
-                System.out.print("Digite a nova quantidade para '" + itemAntigo.produto().nome() + "': ");
-                int novaQuantidade = scanner.nextInt();
-                scanner.nextLine();
-
-                if (novaQuantidade > 0) {
-                    ItemPedido itemAtualizado = new ItemPedido(itemAntigo.produto(), novaQuantidade, itemAntigo.precoVenda());
-                    pedido.getItens().set(indice, itemAtualizado);
-                    System.out.println("Quantidade alterada com sucesso!");
-                } else {
-                    System.out.println("Erro: A quantidade deve ser maior que zero. Para remover o item, use a opção 3.");
-                }
+                pedido.atualizarItem(itemAtualizado);
+                System.out.println("Quantidade alterada com sucesso!");
             } else {
-                System.out.println("Erro: Índice inválido.");
+                System.out.println("Erro: A quantidade deve ser maior que zero.");
             }
         } catch (Exception e) {
             System.out.println("Ocorreu um erro. Por favor, digite um número válido.");
@@ -195,7 +185,7 @@ public class PedidoService {
             return false;
         }
 
-        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+        pedido.finalizar();
 
         System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
         System.out.println("Notificação enviada para o cliente " + pedido.getCliente().nome() + " por e-mail (" + pedido.getCliente().email() + "):");
@@ -210,7 +200,7 @@ public class PedidoService {
             return;
         }
 
-        pedido.setStatus(StatusPedido.PAGO);
+        pedido.pagar();
         System.out.println("\nPagamento processado com sucesso!");
         System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
         System.out.println("Notificação enviada para o cliente " + pedido.getCliente().nome() + " por e-mail (" + pedido.getCliente().email() + "):");
@@ -223,7 +213,7 @@ public class PedidoService {
             return;
         }
 
-        pedido.setStatus(StatusPedido.FINALIZADO);
+        pedido.entregar();
         System.out.println("\nPedido enviado para entrega!");
         System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
         System.out.println("Notificação enviada para o cliente " + pedido.getCliente().nome() + " por e-mail (" + pedido.getCliente().email() + "):");
