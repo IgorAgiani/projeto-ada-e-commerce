@@ -23,21 +23,21 @@ public class PedidoService {
 
     public Pedido iniciarVenda(ClienteService clienteService, Scanner scanner) {
         System.out.println("\n--- Iniciando Nova Venda ---");
-        System.out.println("Selecione o cliente:");
+        System.out.println("Clientes disponíveis:");
         clienteService.listar();
 
         if (clienteRepository.buscarTodos().isEmpty()) {
+            System.out.println("Não há clientes cadastrados para iniciar uma venda.");
             return null;
         }
 
-        System.out.print("Digite o índice do cliente: ");
-        int indiceCliente = scanner.nextInt();
-        scanner.nextLine();
+        System.out.print("\nDigite o RG do cliente para o pedido: ");
+        String rgCliente = scanner.nextLine();
 
-        Cliente clienteSelecionado = clienteRepository.buscarPorIndice(indiceCliente);
+        Cliente clienteSelecionado = clienteRepository.buscarPorRg(rgCliente);
 
         if (clienteSelecionado == null) {
-            System.out.println("Erro: Cliente inválido.");
+            System.out.println("Erro: Nenhum cliente encontrado com o RG informado.");
             return null;
         }
 

@@ -51,47 +51,30 @@ public class ClienteService implements GerenciadorCadastro<Cliente> {
     }
 
     public void atualizar(Scanner scanner) {
-        listar();
+        System.out.print("\nDigite o RG do cliente que deseja atualizar: ");
+        String rg = scanner.nextLine();
 
-        if (clienteRepository.buscarTodos().isEmpty()) {
+        Cliente clienteAntigo = clienteRepository.buscarPorRg(rg);
+
+        if (clienteAntigo == null) {
+            System.out.println("Erro: Cliente com RG " + rg + " não encontrado.");
             return;
         }
 
-        try {
-            System.out.print("\nEscolha o índice do cliente que deseja atualizar: ");
-            int index = scanner.nextInt();
-            scanner.nextLine(); // Limpa o buffer
+        System.out.println("Deixe em branco para não alterar. Cliente encontrado: " + clienteAntigo.nome());
+        System.out.print("Novo nome (" + clienteAntigo.nome() + "): ");
+        String novoNome = scanner.nextLine();
 
-            Cliente clienteAntigo = clienteRepository.buscarPorIndice(index);
+        System.out.print("Novo e-mail (" + clienteAntigo.email() + "): ");
+        String novoEmail = scanner.nextLine();
 
-            if (clienteAntigo == null) {
-                System.out.println("Índice inválido.");
-                return;
-            }
+        String nomeFinal = novoNome.isEmpty() ? clienteAntigo.nome() : novoNome;
+        String emailFinal = novoEmail.isEmpty() ? clienteAntigo.email() : novoEmail;
 
-            System.out.println("Deixe em branco para não alterar.");
-            System.out.print("Novo nome (" + clienteAntigo.nome() + "): ");
-            String novoNome = scanner.nextLine();
+        Cliente clienteAtualizado = new Cliente(nomeFinal, clienteAntigo.rg(), emailFinal);
 
-            System.out.print("Novo RG (" + clienteAntigo.rg() + "): ");
-            String novoRg = scanner.nextLine();
+        clienteRepository.salvar(clienteAtualizado);
 
-            System.out.print("Novo e-mail (" + clienteAntigo.email() + "): ");
-            String novoEmail = scanner.nextLine();
-
-            String nomeFinal = novoNome.isEmpty() ? clienteAntigo.nome() : novoNome;
-            String rgFinal = novoRg.isEmpty() ? clienteAntigo.rg() : novoRg;
-            String emailFinal = novoEmail.isEmpty() ? clienteAntigo.email() : novoEmail;
-
-            Cliente clienteAtualizado = new Cliente(nomeFinal, rgFinal, emailFinal);
-
-            clienteRepository.atualizar(index, clienteAtualizado);
-
-            System.out.println("Cliente atualizado com sucesso!");
-
-        } catch (InputMismatchException e) {
-            System.out.println("Erro: Índice inválido. Por favor, digite um número.");
-            scanner.nextLine();
-        }
+        System.out.println("Cliente atualizado com sucesso!");
     }
 }
