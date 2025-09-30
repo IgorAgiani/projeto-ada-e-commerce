@@ -4,16 +4,14 @@ import br.com.adatech.ecommerce.model.*;
 import br.com.adatech.ecommerce.repository.ClienteRepository;
 import br.com.adatech.ecommerce.repository.PedidoRepository;
 import br.com.adatech.ecommerce.repository.ProdutoRepository;
-import br.com.adatech.ecommerce.model.StatusPedido;
 
 import java.util.Scanner;
 
 public class PedidoService {
 
-    private PedidoRepository pedidoRepository;
-    private ClienteRepository clienteRepository;
-    private ProdutoRepository produtoRepository;
-
+    private final PedidoRepository pedidoRepository;
+    private final ClienteRepository clienteRepository;
+    private final ProdutoRepository produtoRepository;
 
     public PedidoService(PedidoRepository pedidoRepository, ClienteRepository clienteRepository, ProdutoRepository produtoRepository) {
         this.pedidoRepository = pedidoRepository;
@@ -104,11 +102,13 @@ public class PedidoService {
 
     public void removerItem(Pedido pedido, Scanner scanner) {
         if (pedido.getStatus() != StatusPedido.ABERTO) {
+            System.out.println("Este pedido não está aberto e não pode ser modificado.");
             return;
         }
 
         System.out.println("\n--- Remover Item do Pedido ---");
         if (pedido.getItens().isEmpty()) {
+            System.out.println("O pedido não contém itens para remover.");
             return;
         }
 
@@ -118,9 +118,7 @@ public class PedidoService {
         System.out.print("\nDigite o nome do produto que deseja remover do pedido: ");
         String nomeProdutoParaRemover = scanner.nextLine();
 
-        boolean foiRemovido = pedido.getItens().removeIf(
-                item -> item.produto().nome().equalsIgnoreCase(nomeProdutoParaRemover)
-        );
+        boolean foiRemovido = pedido.removerItemPorNome(nomeProdutoParaRemover);
 
         if (foiRemovido) {
             System.out.println("Item '" + nomeProdutoParaRemover + "' removido com sucesso!");
@@ -131,10 +129,12 @@ public class PedidoService {
 
     public void alterarQuantidadeItem(Pedido pedido, Scanner scanner) {
         if (pedido.getStatus() != StatusPedido.ABERTO) {
+            System.out.println("Este pedido não está aberto e não pode ser modificado.");
             return;
         }
         System.out.println("\n--- Alterar Quantidade do Item ---");
         if (pedido.getItens().isEmpty()) {
+            System.out.println("O pedido não contém itens para alterar.");
             return;
         }
 
@@ -161,7 +161,6 @@ public class PedidoService {
 
             if (novaQuantidade > 0) {
                 ItemPedido itemAtualizado = new ItemPedido(itemAntigo.produto(), novaQuantidade, itemAntigo.precoVenda());
-
                 pedido.atualizarItem(itemAtualizado);
                 System.out.println("Quantidade alterada com sucesso!");
             } else {
@@ -174,19 +173,13 @@ public class PedidoService {
     }
 
     public boolean finalizarPedido(Pedido pedido) {
-        System.out.println("\n--- Finalizando Pedido ---");
-
-        if (pedido.getItens().isEmpty()) {
-            System.out.println("Erro: Não é possível finalizar um pedido sem itens.");
-            return false;
-        }
-        if (pedido.getValorTotal() <= 0) {
-            System.out.println("Erro: Não é possível finalizar um pedido com valor total igual ou menor que zero.");
+        if (pedido.getItens().isEmpty() || pedido.getValorTotal() <= 0) {
+            System.out.println("Erro: O pedido deve ter ao menos um item e valor maior que zero para ser finalizado.");
             return false;
         }
 
         pedido.finalizar();
-
+        System.out.println("\n--- Finalizando Pedido ---");
         System.out.println("Status do Pedido alterado para: " + pedido.getStatus());
         System.out.println("Notificação enviada para o cliente " + pedido.getCliente().nome() + " por e-mail (" + pedido.getCliente().email() + "):");
         System.out.println(">> Olá, " + pedido.getCliente().nome() + "! Seu pedido de R$" + pedido.getValorTotal() + " foi recebido e está aguardando pagamento.");

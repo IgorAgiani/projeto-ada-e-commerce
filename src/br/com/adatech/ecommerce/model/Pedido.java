@@ -47,10 +47,6 @@ public class Pedido {
         this.itens.add(novoItem);
     }
 
-    public boolean removerItem(ItemPedido item) {
-        return this.itens.remove(item);
-    }
-
     public double getValorTotal() {
         return this.itens.stream()
                 .mapToDouble(item -> item.quantidade() * item.precoVenda())
@@ -86,5 +82,9 @@ public class Pedido {
 
     void setStatus(StatusPedido status) {
         this.status = status;
+    }
+
+    public boolean removerItemPorNome(String nomeProdutoParaRemover) {
+        return this.itens.removeIf(item -> item.produto().nome().equalsIgnoreCase(nomeProdutoParaRemover));
     }
 }

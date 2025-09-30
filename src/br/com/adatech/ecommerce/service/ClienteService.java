@@ -3,20 +3,20 @@ package br.com.adatech.ecommerce.service;
 import br.com.adatech.ecommerce.model.Cliente;
 import br.com.adatech.ecommerce.repository.ClienteRepository;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class ClienteService implements GerenciadorCadastro<Cliente> {
 
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
 
+    @Override
     public void cadastrar(Scanner scanner) {
-        System.out.println("\n--- Cadastro de Novo br.com.adatech.ecommerce.model.Cliente ---");
+        System.out.println("\n--- Cadastro de Novo Cliente ---");
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
@@ -31,11 +31,17 @@ public class ClienteService implements GerenciadorCadastro<Cliente> {
             return;
         }
 
+        if (clienteRepository.buscarPorRg(rg) != null) {
+            System.out.println("Erro: Já existe um cliente com o RG " + rg);
+            return;
+        }
+
         Cliente novoCliente = new Cliente(nome, rg, email);
         clienteRepository.salvar(novoCliente);
-        System.out.println("br.com.adatech.ecommerce.model.Cliente cadastrado com sucesso!");
+        System.out.println("Cliente cadastrado com sucesso!");
     }
 
+    @Override
     public void listar() {
         System.out.println("\n--- Lista de Clientes ---");
         List<Cliente> clientes = clienteRepository.buscarTodos();
@@ -45,11 +51,10 @@ public class ClienteService implements GerenciadorCadastro<Cliente> {
             return;
         }
 
-        for (int i = 0; i < clientes.size(); i++) {
-            System.out.println(i + " - " + clientes.get(i));
-        }
+        clientes.forEach(System.out::println);
     }
 
+    @Override
     public void atualizar(Scanner scanner) {
         System.out.print("\nDigite o RG do cliente que deseja atualizar: ");
         String rg = scanner.nextLine();
